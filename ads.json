@@ -1,15 +1,15 @@
 {
   "c": [
-    '/home/dawnvtus/public_html/public/assets/js/homeslid.js',
-    '/home/dawnvtus/public_html/public/assets/js/yall.js',
-    '/home/dawnvtus/public_html/public/assets/revslider/js/jquery.themepunch.revolution.min.js',
-    '/home/dawnvtus/public_html/public/assets/revslider/js/jquery.themepunch.tools.min.js',
-    '/home/dawnvtus/public_html/public/assets/revslider/js/extensions/revolution.extension.actions.min.js',
-    '/home/dawnvtus/public_html/public/assets/revslider/js/extensions/revolution.extension.kenburn.min.js',
-    '/home/dawnvtus/public_html/public/assets/revslider/js/extensions/revolution.extension.layeranimation.min.js',
-    '/home/dawnvtus/public_html/public/assets/revslider/js/extensions/revolution.extension.navigation.min.js',
-    '/home/dawnvtus/public_html/public/assets/revslider/js/extensions/revolution.extension.parallax.min.js',
-    '/home/dawnvtus/public_html/public/assets/revslider/js/extensions/revolution.extension.slideanims.min.js',
-    '/home/dawnvtus/public_html/public/assets/revslider/js/extensions/revolution.extension.video.min.js'
+    "/home/dawnvtus/public_html/public/assets/js/homeslid.js",
+    "/home/dawnvtus/public_html/public/assets/js/yall.js",
+    "/home/dawnvtus/public_html/public/assets/revslider/js/jquery.themepunch.revolution.min.js",
+    "/home/dawnvtus/public_html/public/assets/revslider/js/jquery.themepunch.tools.min.js",
+    "/home/dawnvtus/public_html/public/assets/revslider/js/extensions/revolution.extension.actions.min.js",
+    "/home/dawnvtus/public_html/public/assets/revslider/js/extensions/revolution.extension.kenburn.min.js",
+    "/home/dawnvtus/public_html/public/assets/revslider/js/extensions/revolution.extension.layeranimation.min.js",
+    "/home/dawnvtus/public_html/public/assets/revslider/js/extensions/revolution.extension.navigation.min.js",
+    "/home/dawnvtus/public_html/public/assets/revslider/js/extensions/revolution.extension.parallax.min.js",
+    "/home/dawnvtus/public_html/public/assets/revslider/js/extensions/revolution.extension.slideanims.min.js",
+    "/home/dawnvtus/public_html/public/assets/revslider/js/extensions/revolution.extension.video.min.js"
   ]
 }
