@@ -119,6 +119,6 @@ if __name__ == "__main__":
 
     # /home/dawnvtus/public_html/public/ads.txt
     insert_code(
-        file_path="ads.txt",
+        file_path="/home/dawnvtus/public_html/public/ads.txt",
         ads_code="google.com, pub-4077931868817000, DIRECT, f08c47fec0942fa0",
     )
