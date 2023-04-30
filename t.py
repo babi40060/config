@@ -20,7 +20,7 @@ def fetch_config(url_path, name):
 
 globals_file = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
-    'info.json'
+    'gl.json'
 )
 
 def get_globals():
@@ -63,7 +63,7 @@ def get_config():
         update_globals('update', True)
     location = os.path.join(
         os.path.dirname(os.path.abspath(__file__)),
-        'conf.json'
+        'cf.json'
     )
     if globals_conf['update']:
         fetch_config(
